@@ -54,7 +54,7 @@ public class PotionButtonPacket implements IMessage , IMessageHandler<PotionButt
 			}
 		}
         
-        p.closeScreen();
+       // p.closeScreen();
         
 		return null;
 	}
