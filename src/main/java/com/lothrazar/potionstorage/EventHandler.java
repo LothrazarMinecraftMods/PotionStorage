@@ -34,11 +34,16 @@ public class EventHandler
 
 		int padding = 10;
 		
-		int x,y = padding,w = 20,h = w;
+		int x,y = padding,w = 80,h = 20;
 
 		if(event.gui instanceof net.minecraft.client.gui.inventory.GuiInventory)
 		{
-			x = Minecraft.getMinecraft().displayWidth/2 - w - padding;//align to right side
+			//x = Minecraft.getMinecraft().displayWidth/2 - w - padding;//align to right side
+			//TODO: config to swap
+			
+			//this is left side
+			x = padding;
+			
 
 			event.buttonList.add(new GuiButtonPotions(button_id++, x,y,w,h));
 		}
