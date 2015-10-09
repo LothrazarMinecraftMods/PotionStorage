@@ -1,9 +1,7 @@
 package com.lothrazar.potionstorage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.UUID;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,7 +31,8 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
 		if(property != null && property instanceof InventoryPersistProperty)
 		{
 			return (InventoryPersistProperty)property;
-		} else
+		} 
+		else
 		{
 			return null;
 		}
@@ -44,14 +43,12 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
 		this.player = player;
 	}
 
-	
 	@Override
 	public void loadNBTData(NBTTagCompound compound)
 	{
-
-		
 		NBTTagList taglist = compound.getTagList("potions",Constants.NBT.TAG_COMPOUND);
 		potions = new ArrayList<NBTTagCompound>();
+		
 		for (int i = 0; i < taglist.tagCount(); ++i)
 		{
 			NBTTagCompound tags = taglist.getCompoundTagAt(i);//tagAt
@@ -72,19 +69,15 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
 	@Override
 	public void saveNBTData(NBTTagCompound properties) 
 	{
-	
 		NBTTagList nbttaglist = new NBTTagList();
 		
-		int i = 0;
 		for(NBTTagCompound pot : potions)
 		{
 			nbttaglist.appendTag(pot);
-			i++;
 		}
 		properties.setTag("potions", nbttaglist);
 	}
 	
-
 	public int countPotionEffects()
 	{
 		return potions == null ? 0 : potions.size();
@@ -94,17 +87,15 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
 	{
 		PotionEffect pot;
 		ArrayList<PotionEffect> pots = new ArrayList<PotionEffect>();
+		
 		for(NBTTagCompound tag : potions)
 		{
-			
 			pot = PotionEffect.readCustomPotionEffectFromNBT(tag);
 			
 			if(pot != null)
 			{
 				pots.add(pot);
 			}
-			//else System.out.println("ERROR null pot from tag");
-			
 		}
 		
 		potions = new ArrayList<NBTTagCompound>();
@@ -114,13 +105,10 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
 	
 	public void savePotionEffects()
 	{
-		// Collection collection = p.getActivePotionEffects();
-		//ArrayList<PotionEffect> active = (ArrayList<PotionEffect>)p.getActivePotionEffects();
         PotionEffect potioneffect;
         Iterator iterator = this.player.getActivePotionEffects().iterator();
         
-       // ArrayList<String> encodedPotions = new ArrayList<String> ();
-        String s;
+        //String s;
         
         potions = new ArrayList<NBTTagCompound>();
         NBTTagCompound tags;
@@ -129,17 +117,18 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
         {
             potioneffect = (PotionEffect)iterator.next();
             
-            s = potioneffect.getPotionID() +","+potioneffect.getAmplifier()+","+potioneffect.getDuration();
+            //s = potioneffect.getPotionID() +","+potioneffect.getAmplifier()+","+potioneffect.getDuration();
 
             tags = new NBTTagCompound();
-            
-            if(potioneffect.getDuration()*20 > 10)
-            	potioneffect.writeCustomPotionEffectToNBT(tags);
+
             //else it is shorter than 10 seconds. might be from a beacon
             //do not save
+            if(potioneffect.getDuration()*20 > 10)
+            {
+            	potioneffect.writeCustomPotionEffectToNBT(tags);
 
-            potions.add(tags);
+            	potions.add(tags);
+            }
         }
 	}
-	
 }

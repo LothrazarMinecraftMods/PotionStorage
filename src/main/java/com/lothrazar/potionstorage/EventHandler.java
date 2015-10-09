@@ -41,7 +41,6 @@ public class EventHandler
 			x = Minecraft.getMinecraft().displayWidth/2 - w - padding;//align to right side
 
 			event.buttonList.add(new GuiButtonPotions(button_id++, x,y,w,h));
-			
 		}
 	}
 }
