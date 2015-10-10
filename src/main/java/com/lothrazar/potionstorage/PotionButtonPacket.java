@@ -1,8 +1,10 @@
 package com.lothrazar.potionstorage;
 
 import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -31,6 +33,7 @@ public class PotionButtonPacket implements IMessage , IMessageHandler<PotionButt
 		ByteBufUtils.writeTag(buf, this.tags);
 	}
 
+	public static boolean allowMerge = true;
 	@Override
 	public IMessage onMessage(PotionButtonPacket message, MessageContext ctx)
 	{
@@ -50,12 +53,39 @@ public class PotionButtonPacket implements IMessage , IMessageHandler<PotionButt
 			for(PotionEffect pot : storage.getSavedPotionEffects())
 			{
 				//make a copy
-				p.addPotionEffect(new PotionEffect(pot));
+				
+				//wait dont we want to merge
+				
+				//
+				if(allowMerge)
+					addOrMergePotionEffect(p, pot);
+				else
+					p.addPotionEffect(new PotionEffect(pot));
 			}
 		}
         
        // p.closeScreen();
         
 		return null;
+	}
+	
+	//copied  from my PowerPApples mod
+	public static void addOrMergePotionEffect(EntityLivingBase player, PotionEffect newp)
+	{
+		if(player.isPotionActive(newp.getPotionID()))
+		{
+			//do not use built in 'combine' function, just add up duration myself
+			PotionEffect p = player.getActivePotionEffect(Potion.potionTypes[newp.getPotionID()]);
+			
+			int ampMax = Math.max(p.getAmplifier(), newp.getAmplifier());
+		
+			player.addPotionEffect(new PotionEffect(newp.getPotionID()
+					,newp.getDuration() + p.getDuration()
+					,ampMax));
+		}
+		else
+		{
+			player.addPotionEffect(new PotionEffect(newp));
+		}
 	}
 }
