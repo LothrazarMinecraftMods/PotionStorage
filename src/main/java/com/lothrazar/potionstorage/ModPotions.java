@@ -1,12 +1,17 @@
 package com.lothrazar.potionstorage;
 
 import org.apache.logging.log4j.Logger;
+
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,11 +26,10 @@ public class ModPotions
 	@SidedProxy(clientSide = "com.lothrazar.potionstorage.ClientProxy", serverSide = "com.lothrazar.potionstorage.CommonProxy")
 	public static CommonProxy proxy;
 	public SimpleNetworkWrapper network ;
-	public static Logger logger;
+    public static Configuration config;
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-    	logger = event.getModLog();
     	network = NetworkRegistry.INSTANCE.newSimpleChannel(Const.MODID);
     	 
     	loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
@@ -33,20 +37,23 @@ public class ModPotions
     	int packetID = 0;
     
     	network.registerMessage(PotionButtonPacket.class,PotionButtonPacket.class,  packetID++, Side.SERVER);
-    	
+
+		MinecraftForge.EVENT_BUS.register(instance);
+		FMLCommonHandler.instance().bus().register(instance); 
     	proxy.registerHandlers();
     }
-    public static Configuration config;
     
+	@SubscribeEvent
+	public void onConfigChanged(OnConfigChangedEvent event) 
+	{
+		if (event.modID.equals(Const.MODID)) syncConfig();
+	}
+
 	private void loadConfig(Configuration c)
 	{
-		
 		config = c;
 		config.load();
 		syncConfig();
-		
-		
-		
 	}
 	
 	public static void syncConfig()
@@ -55,8 +62,6 @@ public class ModPotions
 				
 		PotionButtonPacket.allowMerge = config.getBoolean("allow_merge",category,true,"Allow similar potion effects to merge.  For example, if you have 1 minute of speed in storage, drink another speed potion, the time will get added together if this is true.");
 		
-
 		if(config.hasChanged()){config.save();}
-		
 	}
 }
