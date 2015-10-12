@@ -3,7 +3,7 @@
   "modid": "potionstorage",
   "name": "Potion Storage",
   "description": "Adds one simple button that lets you put your active potion effects on hold, and reapply them later.  Only works if the effects have over 10 seconds remaining.",
-  "version": "1.8-1.0.1",
+  "version": "1.8-1.0.2",
   "mcversion": "1.8",
   "url": "",
   "updateUrl": "",
