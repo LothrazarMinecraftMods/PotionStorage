@@ -72,16 +72,32 @@ public class PotionButtonPacket implements IMessage , IMessageHandler<PotionButt
 	//copied  from my PowerPApples mod
 	public static void addOrMergePotionEffect(EntityLivingBase player, PotionEffect newp)
 	{
+		//only merge if they are the same level
 		if(player.isPotionActive(newp.getPotionID()))
 		{
 			//do not use built in 'combine' function, just add up duration myself
 			PotionEffect p = player.getActivePotionEffect(Potion.potionTypes[newp.getPotionID()]);
 			
-			int ampMax = Math.max(p.getAmplifier(), newp.getAmplifier());
-		
-			player.addPotionEffect(new PotionEffect(newp.getPotionID()
-					,newp.getDuration() + p.getDuration()
-					,ampMax));
+			if(p.getAmplifier() != newp.getAmplifier())				
+			{
+				//for example, if you take speedII at 1:30, and speed I at 3:00
+				//then take the maxtime and the min level
+				
+
+				int ampMin = Math.min(p.getAmplifier(), newp.getAmplifier());
+				int timeMax = Math.max(p.getDuration(), newp.getDuration());
+
+				player.addPotionEffect(new PotionEffect(newp.getPotionID()
+						,timeMax
+						,ampMin));
+			}
+			else
+			{
+				
+				player.addPotionEffect(new PotionEffect(newp.getPotionID()
+						,newp.getDuration() + p.getDuration()
+						,p.getAmplifier()));
+			}
 		}
 		else
 		{
