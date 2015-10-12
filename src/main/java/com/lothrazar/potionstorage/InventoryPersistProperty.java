@@ -102,7 +102,6 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
 		return pots;
 	}
 	
-	
 	public void savePotionEffects()
 	{
         PotionEffect potioneffect;
@@ -130,5 +129,15 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
             	potions.add(tags);
             }
         }
+	}
+	
+	//used for ondeath
+	public void setPotionNBT(ArrayList<NBTTagCompound> p)
+	{
+		potions = p;
+	}
+	public ArrayList<NBTTagCompound> getPotionNBT()
+	{
+		return potions;
 	}
 }
