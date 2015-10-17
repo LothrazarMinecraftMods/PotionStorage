@@ -105,7 +105,7 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
 	public void savePotionEffects()
 	{
         PotionEffect potioneffect;
-        Iterator iterator = this.player.getActivePotionEffects().iterator();
+        Iterator<?> iterator = this.player.getActivePotionEffects().iterator();
         
         //String s;
         
