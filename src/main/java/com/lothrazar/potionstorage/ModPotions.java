@@ -51,8 +51,8 @@ public class ModPotions
 		String category = Configuration.CATEGORY_GENERAL;
 				
 		PotionButtonPacket.allowMerge = config.getBoolean("allow_merge",category,true,"Allow similar potion effects to merge.  For example, if you have 1 minute of speed in storage, drink another speed potion, the time will get added together if this is true.");
-		persistOnDeath = config.getBoolean("persist_death",category,true,"Allowyour saved potions to stick with you through death.");
-		showInventoryButton = config.getBoolean("show_button",category,true,"Allowyour saved potions to stick with you through death.");
+		persistOnDeath = config.getBoolean("persist_death",category,true,"Allow your saved potions to stick with you through death.");
+		showInventoryButton = config.getBoolean("show_button",category,true,"Show or hide the inventory button for potions, (you can still use the keybinding).");
 		
 		if(config.hasChanged()){config.save();}
 	}
