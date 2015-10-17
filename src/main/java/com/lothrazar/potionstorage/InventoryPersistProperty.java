@@ -115,7 +115,8 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
         while (iterator.hasNext())
         {
             potioneffect = (PotionEffect)iterator.next();
-            
+
+			if(ModPotions.ignored.contains(potioneffect.getPotionID())){continue;}
             //s = potioneffect.getPotionID() +","+potioneffect.getAmplifier()+","+potioneffect.getDuration();
 
             tags = new NBTTagCompound();
@@ -127,8 +128,14 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
             	potioneffect.writeCustomPotionEffectToNBT(tags);
 
             	potions.add(tags);
+            	
+            	player.removePotionEffect(potioneffect.getPotionID());
             }
         }
+        
+//WAIT ONLY CLEAR IF NOT IGNORED
+		///ModPotionsModPotions
+       // player.clearActivePotions();
 	}
 	
 	//used for ondeath

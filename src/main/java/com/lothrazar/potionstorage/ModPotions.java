@@ -1,5 +1,7 @@
 package com.lothrazar.potionstorage;
 
+import java.util.ArrayList;
+
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -37,6 +39,8 @@ public class ModPotions
     
 	public static boolean persistOnDeath;
 
+	public static boolean allowMerge;
+	public static ArrayList<Integer> ignored;
 	public static boolean showInventoryButton;
 
 	private void loadConfig(Configuration c)
@@ -50,9 +54,30 @@ public class ModPotions
 	{
 		String category = Configuration.CATEGORY_GENERAL;
 				
-		PotionButtonPacket.allowMerge = config.getBoolean("allow_merge",category,true,"Allow similar potion effects to merge.  For example, if you have 1 minute of speed in storage, drink another speed potion, the time will get added together if this is true.");
+		allowMerge = config.getBoolean("allow_merge",category,true,"Allow similar potion effects to merge.  For example, if you have 1 minute of speed in storage, drink another speed potion, the time will get added together if this is true.");
 		persistOnDeath = config.getBoolean("persist_death",category,true,"Allow your saved potions to stick with you through death.");
 		showInventoryButton = config.getBoolean("show_button",category,true,"Show or hide the inventory button for potions, (you can still use the keybinding).");
+		
+		
+		String csv = config.getString("csv_ignored_effects",category,"2,4,9,15,18,19,20","Potion ids that are ignored by this mod: these effects will left alone on the player and not stored.");
+		
+		String[] plist = csv.split(",");
+		
+		ignored = new ArrayList<Integer>();
+		
+		int i;
+		for(String s : plist)
+		{
+			i = -1;
+			try{
+				i = Integer.parseInt(s);
+			}catch(Exception e){
+				
+				i = -1;
+			}
+			if(i > 0){ignored.add(i);}
+		}
+		
 		
 		if(config.hasChanged()){config.save();}
 	}

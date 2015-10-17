@@ -33,7 +33,6 @@ public class PotionButtonPacket implements IMessage , IMessageHandler<PotionButt
 		ByteBufUtils.writeTag(buf, this.tags);
 	}
 
-	public static boolean allowMerge = true;
 	@Override
 	public IMessage onMessage(PotionButtonPacket message, MessageContext ctx)
 	{
@@ -46,7 +45,6 @@ public class PotionButtonPacket implements IMessage , IMessageHandler<PotionButt
 		if(storage.countPotionEffects() == 0)
 		{
 			storage.savePotionEffects();
-	        p.clearActivePotions();
 		}
 		else
 		{
@@ -55,9 +53,10 @@ public class PotionButtonPacket implements IMessage , IMessageHandler<PotionButt
 				//make a copy
 				
 				//wait dont we want to merge
+
+				if(ModPotions.ignored.contains(pot.getPotionID())){continue;}
 				
-				//
-				if(allowMerge)
+				if(ModPotions.allowMerge)
 					addOrMergePotionEffect(p, pot);
 				else
 					p.addPotionEffect(new PotionEffect(pot));
@@ -72,6 +71,7 @@ public class PotionButtonPacket implements IMessage , IMessageHandler<PotionButt
 	//copied  from my PowerPApples mod
 	public static void addOrMergePotionEffect(EntityLivingBase player, PotionEffect newp)
 	{
+		
 		//only merge if they are the same level
 		if(player.isPotionActive(newp.getPotionID()))
 		{
