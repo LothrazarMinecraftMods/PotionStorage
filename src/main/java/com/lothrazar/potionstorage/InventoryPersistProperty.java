@@ -2,6 +2,8 @@ package com.lothrazar.potionstorage;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -105,16 +107,21 @@ public class InventoryPersistProperty implements IExtendedEntityProperties
 	public void savePotionEffects()
 	{
         PotionEffect potioneffect;
-        Iterator<?> iterator = this.player.getActivePotionEffects().iterator();
+        //turn the Collection into a flat list
+        Object[] list = this.player.getActivePotionEffects().toArray();//.iterator();
         
         //String s;
         
         potions = new ArrayList<NBTTagCompound>();
         NBTTagCompound tags;
         
-        while (iterator.hasNext())
+        //while (iterator.hasNext())
+        for (int i = 0; i < list.length; i++) 
         {
-            potioneffect = (PotionEffect)iterator.next();
+        	//just to be safe
+        	if(list[i] instanceof PotionEffect == false){continue;}
+        	
+            potioneffect = (PotionEffect)list[i];
 
 			if(ModPotions.ignored.contains(potioneffect.getPotionID())){continue;}
             //s = potioneffect.getPotionID() +","+potioneffect.getAmplifier()+","+potioneffect.getDuration();
